@@ -1,11 +1,23 @@
-html, body {
-    height: 100%;
-    margin: 0;
-  }
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
 
-  body {
-    background: black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+body {
+  background: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#alert {
+  position: absolute;
+  z-index: 100;
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  width: 330px;
+  height: 150px;
+  text-align: center;
+  display: none;
+}
