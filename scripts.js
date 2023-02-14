@@ -4,7 +4,7 @@ const grid = 15;
 const paddleHeight = grid * 5; // 80
 const maxPaddleY = canvas.height - grid - paddleHeight;
 
-var paddleSpeed = 6;
+var paddleSpeed = 5.3;
 var ballSpeed = 5;
 
 var leftScore = 0;
@@ -44,6 +44,7 @@ const ball = {
   dx: ballSpeed,
   dy: -ballSpeed,
 };
+
 
 // check for collision between two objects using axis-aligned bounding box (AABB)
 // @see https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
@@ -104,9 +105,11 @@ function loop() {
     if (ball.y < grid) {
       ball.y = grid;
       ball.dy *= -1;
+      leftPaddle.dy = paddleSpeed;
     } else if (ball.y + grid > canvas.height - grid) {
       ball.y = canvas.height - grid * 2;
       ball.dy *= -1;
+      leftPaddle.dy = -paddleSpeed;
     }
 
     // reset ball if it goes past paddle (but only if we haven't already done so)
@@ -129,7 +132,7 @@ function loop() {
     // check to see if ball collides with paddle. if they do change x velocity
     if (collides(ball, leftPaddle)) {
       ball.dx *= -1;
-
+      
       // move ball next to the paddle otherwise the collision will happen again
       // in the next frame
       ball.x = leftPaddle.x + leftPaddle.width;
@@ -173,14 +176,14 @@ document.addEventListener("keydown", function (e) {
     rightPaddle.dy = paddleSpeed;
   }
 
-  // w key
-  if (e.which === 87) {
-    leftPaddle.dy = -paddleSpeed;
-  }
-  // a key
-  else if (e.which === 83) {
-    leftPaddle.dy = paddleSpeed;
-  }
+  // // w key
+  // if (e.which === 87) {
+  //   leftPaddle.dy = -paddleSpeed;
+  // }
+  // // a key
+  // else if (e.which === 83) {
+  //   leftPaddle.dy = paddleSpeed;
+  // }
 });
 
 // listen to keyboard events to stop the paddle if key is released
