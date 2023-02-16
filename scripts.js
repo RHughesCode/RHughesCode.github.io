@@ -45,6 +45,8 @@ const ball = {
   dy: -ballSpeed,
 };
 
+var maxPaddleYL = canvas.height - grid - leftPaddle.height;
+var maxPaddleYR = canvas.height - grid - rightPaddle.height;
 
 // check for collision between two objects using axis-aligned bounding box (AABB)
 // @see https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
@@ -72,14 +74,14 @@ function loop() {
     // prevent paddles from going through walls
     if (leftPaddle.y < grid) {
       leftPaddle.y = grid;
-    } else if (leftPaddle.y > maxPaddleY) {
-      leftPaddle.y = maxPaddleY;
+    } else if (leftPaddle.y > maxPaddleYL) {
+      leftPaddle.y = maxPaddleYL;
     }
 
     if (rightPaddle.y < grid) {
       rightPaddle.y = grid;
-    } else if (rightPaddle.y > maxPaddleY) {
-      rightPaddle.y = maxPaddleY;
+    } else if (rightPaddle.y > maxPaddleYR) {
+      rightPaddle.y = maxPaddleYR;
     }
 
     // draw paddles
@@ -136,12 +138,16 @@ function loop() {
       // move ball next to the paddle otherwise the collision will happen again
       // in the next frame
       ball.x = leftPaddle.x + leftPaddle.width;
+      leftPaddle.height = 0.9 * leftPaddle.height;
+      maxPaddleYL = canvas.height - grid - leftPaddle.height;
     } else if (collides(ball, rightPaddle)) {
       ball.dx *= -1;
 
       // move ball next to the paddle otherwise the collision will happen again
       // in the next frame
       ball.x = rightPaddle.x - ball.width;
+      rightPaddle.height = 0.9 * rightPaddle.height;
+      maxPaddleYR = canvas.height - grid - rightPaddle.height;
     }
 
     // draw ball
