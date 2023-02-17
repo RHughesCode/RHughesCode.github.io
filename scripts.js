@@ -78,6 +78,13 @@ function collides(obj1, obj2) {
 // game loop
 function loop() {
   if (leftScore > 6 || rightScore > 6) {
+
+    if (leftScore > 6) {
+      document.getElementById("winner").innerHTML = "You Lost!";
+    }
+    else {
+      document.getElementById("winner").innerHTML = "You Won!";
+    }
     document.querySelector("#alert").style.display="block"
   } else {
     requestAnimationFrame(loop);
