@@ -45,6 +45,24 @@ const ball = {
   dy: -ballSpeed,
 };
 
+const obstacle1 = {
+
+  x: 250,
+  y: 200,
+  width: 35,
+  height: 80
+
+};
+
+const obstacle2 = {
+  
+  x: 450,
+  y: 400,
+  width: 35,
+  height: 80
+
+};
+
 
 // check for collision between two objects using axis-aligned bounding box (AABB)
 // @see https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
@@ -144,7 +162,35 @@ function loop() {
       ball.x = rightPaddle.x - ball.width;
     }
 
+    // spawn in obstacles
+    context.fillStyle = "red";
+    context.fillRect(obstacle1.x, obstacle1.y, obstacle1.width, obstacle1.height);
+    context.fillRect(obstacle2.x, obstacle2.y, obstacle2.width, obstacle2.height);
+
+    // check to see if ball collides with obstacles
+    if (collides(ball, obstacle1)) {
+      ball.dx *= -1;
+      
+      if (ball.dx == ballSpeed) {
+        ball.x = obstacle1.x + obstacle1.width;
+      }
+      else if (ball.dx == -ballSpeed) {
+        ball.x = obstacle1.x - ball.width;
+      }
+    }
+    if (collides(ball, obstacle2)) {
+      ball.dx *= -1;
+      
+      if (ball.dx == ballSpeed) {
+        ball.x = obstacle2.x + obstacle2.width;
+      }
+      else if (ball.dx == -ballSpeed) {
+        ball.x = obstacle2.x - ball.width;
+      }
+    }
+
     // draw ball
+    context.fillStyle = "white";
     context.fillRect(ball.x, ball.y, ball.width, ball.height);
 
     // draw walls
