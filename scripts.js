@@ -45,6 +45,9 @@ const ball = {
   dy: -ballSpeed,
 };
 
+
+var maxPaddleYL = canvas.height - grid - leftPaddle.height;
+var maxPaddleYR = canvas.height - grid - rightPaddle.height;
 const obstacle1 = {
 
   x: 250,
@@ -97,14 +100,14 @@ function loop() {
     // prevent paddles from going through walls
     if (leftPaddle.y < grid) {
       leftPaddle.y = grid;
-    } else if (leftPaddle.y > maxPaddleY) {
-      leftPaddle.y = maxPaddleY;
+    } else if (leftPaddle.y > maxPaddleYL) {
+      leftPaddle.y = maxPaddleYL;
     }
 
     if (rightPaddle.y < grid) {
       rightPaddle.y = grid;
-    } else if (rightPaddle.y > maxPaddleY) {
-      rightPaddle.y = maxPaddleY;
+    } else if (rightPaddle.y > maxPaddleYR) {
+      rightPaddle.y = maxPaddleYR;
     }
 
     // draw paddles
@@ -161,12 +164,16 @@ function loop() {
       // move ball next to the paddle otherwise the collision will happen again
       // in the next frame
       ball.x = leftPaddle.x + leftPaddle.width;
+      leftPaddle.height = 0.9 * leftPaddle.height;
+      maxPaddleYL = canvas.height - grid - leftPaddle.height;
     } else if (collides(ball, rightPaddle)) {
       ball.dx *= -1;
 
       // move ball next to the paddle otherwise the collision will happen again
       // in the next frame
       ball.x = rightPaddle.x - ball.width;
+      rightPaddle.height = 0.9 * rightPaddle.height;
+      maxPaddleYR = canvas.height - grid - rightPaddle.height;
     }
 
     // spawn in obstacles
@@ -247,9 +254,9 @@ document.addEventListener("keyup", function (e) {
     rightPaddle.dy = 0;
   }
 
-  if (e.which === 83 || e.which === 87) {
-    leftPaddle.dy = 0;
-  }
+  //if (e.which === 83 || e.which === 87) {
+  //  leftPaddle.dy = 0;
+  //}
 });
 document.querySelector("#close-btn").addEventListener("click",function(e) {
   e.target.parentElement.style.display="none";
@@ -257,6 +264,10 @@ document.querySelector("#close-btn").addEventListener("click",function(e) {
 document.querySelector("#playAgain-btn").addEventListener("click",function(e) {
   leftScore=rightScore=0;
   e.target.parentElement.style.display="none";
+  leftPaddle.height = paddleHeight;
+  rightPaddle.height = paddleHeight;
+  leftPaddle.y = canvas.height / 2 - paddleHeight / 2;
+  rightPaddle.y = canvas.height / 2 - paddleHeight / 2;
   requestAnimationFrame(loop);
 })
 
