@@ -48,7 +48,7 @@ const ball = {
 const obstacle1 = {
 
   x: 250,
-  y: 200,
+  y: 300,
   width: 35,
   height: 80
 
@@ -57,7 +57,7 @@ const obstacle1 = {
 const obstacle2 = {
   
   x: 450,
-  y: 400,
+  y: 50,
   width: 35,
   height: 80
 
@@ -163,9 +163,7 @@ function loop() {
     }
 
     // spawn in obstacles
-    context.fillStyle = "red";
-    context.fillRect(obstacle1.x, obstacle1.y, obstacle1.width, obstacle1.height);
-    context.fillRect(obstacle2.x, obstacle2.y, obstacle2.width, obstacle2.height);
+    drawObstacles();
 
     // check to see if ball collides with obstacles
     if (collides(ball, obstacle1)) {
@@ -177,6 +175,8 @@ function loop() {
       else if (ball.dx == -ballSpeed) {
         ball.x = obstacle1.x - ball.width;
       }
+      // respawn the obstacle upon impact at a diff. random spot
+      randomizeObstacle(obstacle1);
     }
     if (collides(ball, obstacle2)) {
       ball.dx *= -1;
@@ -187,6 +187,8 @@ function loop() {
       else if (ball.dx == -ballSpeed) {
         ball.x = obstacle2.x - ball.width;
       }
+      // respawn the obstacle upon impact at a diff. random spot
+      randomizeObstacle(obstacle2);
     }
 
     // draw ball
@@ -250,6 +252,22 @@ document.querySelector("#playAgain-btn").addEventListener("click",function(e) {
   e.target.parentElement.style.display="none";
   requestAnimationFrame(loop);
 })
+
+// function to draw in the obstacles
+function drawObstacles() {
+  context.fillStyle = "red";
+  context.fillRect(obstacle1.x, obstacle1.y, obstacle1.width, obstacle1.height);
+  context.fillRect(obstacle2.x, obstacle2.y, obstacle2.width, obstacle2.height);
+}
+
+// function to randomize the position of the obstacle
+function randomizeObstacle(obstacle) {
+  context.fillStyle = "red";
+  // pick a random height between 50 and 450 and reset the obstacle's height
+  obstacle.y = (Math.random() * 401) + 50
+  //redraw the obstacle
+  context.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+}
 
 // start the game
 requestAnimationFrame(loop);
