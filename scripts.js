@@ -198,9 +198,9 @@ document.addEventListener("keyup", function (e) {
     rightPaddle.dy = 0;
   }
 
-  if (e.which === 83 || e.which === 87) {
-    leftPaddle.dy = 0;
-  }
+  //if (e.which === 83 || e.which === 87) {
+  //  leftPaddle.dy = 0;
+  //}
 });
 document.querySelector("#close-btn").addEventListener("click",function(e) {
   e.target.parentElement.style.display="none";
@@ -208,6 +208,10 @@ document.querySelector("#close-btn").addEventListener("click",function(e) {
 document.querySelector("#playAgain-btn").addEventListener("click",function(e) {
   leftScore=rightScore=0;
   e.target.parentElement.style.display="none";
+  leftPaddle.height = paddleHeight;
+  rightPaddle.height = paddleHeight;
+  leftPaddle.y = canvas.height / 2 - paddleHeight / 2;
+  rightPaddle.y = canvas.height / 2 - paddleHeight / 2;
   requestAnimationFrame(loop);
 })
 
