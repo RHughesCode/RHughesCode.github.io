@@ -1,4 +1,7 @@
 const canvas = document.getElementById("game");
+const sound = document.getElementById("sound");
+const sound2 = document.getElementById("sound2");
+const sound3 = document.getElementById("sound3");
 const context = canvas.getContext("2d");
 const grid = 15;
 const paddleHeight = grid * 5; // 80
@@ -9,6 +12,8 @@ var ballSpeed = 5;
 
 var leftScore = 0;
 var rightScore = 0;
+
+
 
 const leftPaddle = {
   // start in the middle of the game on the left side
@@ -59,8 +64,9 @@ function collides(obj1, obj2) {
 
 // game loop
 function loop() {
-  if (leftScore > 6 || rightScore > 6) {
+  if (leftScore > 7|| rightScore > 7) {
     document.querySelector("#alert").style.display="block"
+    sound2.play();
   } else {
     requestAnimationFrame(loop);
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -117,9 +123,15 @@ function loop() {
       ball.resetting = true;
       //keep score
       if (ball.x < 0) {
+        sound3.play();
         rightScore = rightScore + 1;
+        
+        
       } else if (ball.x > canvas.width) {
+        sound3.play();
         leftScore = leftScore + 1;
+        
+        
       }
       // give some time for the player to recover before launching the ball again
       setTimeout(() => {
@@ -133,12 +145,14 @@ function loop() {
     if (collides(ball, leftPaddle)) {
       ball.dx *= -1;
       
+      sound.play();
       // move ball next to the paddle otherwise the collision will happen again
       // in the next frame
       ball.x = leftPaddle.x + leftPaddle.width;
     } else if (collides(ball, rightPaddle)) {
       ball.dx *= -1;
-
+       
+        sound.play();
       // move ball next to the paddle otherwise the collision will happen again
       // in the next frame
       ball.x = rightPaddle.x - ball.width;
