@@ -64,7 +64,7 @@ function collides(obj1, obj2) {
 
 // game loop
 function loop() {
-  if (leftScore > 7|| rightScore > 7) {
+  if (leftScore > 6|| rightScore > 6) {
     document.querySelector("#alert").style.display="block"
     sound2.play();
   } else {
