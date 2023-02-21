@@ -13,8 +13,6 @@ var ballSpeed = 5;
 var leftScore = 0;
 var rightScore = 0;
 
-
-
 const leftPaddle = {
   // start in the middle of the game on the left side
   x: grid * 2,
@@ -125,13 +123,9 @@ function loop() {
       if (ball.x < 0) {
         sound3.play();
         rightScore = rightScore + 1;
-        
-        
       } else if (ball.x > canvas.width) {
         sound3.play();
         leftScore = leftScore + 1;
-        
-        
       }
       // give some time for the player to recover before launching the ball again
       setTimeout(() => {
@@ -151,7 +145,6 @@ function loop() {
       ball.x = leftPaddle.x + leftPaddle.width;
     } else if (collides(ball, rightPaddle)) {
       ball.dx *= -1;
-       
         sound.play();
       // move ball next to the paddle otherwise the collision will happen again
       // in the next frame
