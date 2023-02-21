@@ -49,6 +49,27 @@ const ball = {
 };
 
 
+var maxPaddleYL = canvas.height - grid - leftPaddle.height;
+var maxPaddleYR = canvas.height - grid - rightPaddle.height;
+const obstacle1 = {
+
+  x: 250,
+  y: 300,
+  width: 35,
+  height: 80
+
+};
+
+const obstacle2 = {
+  
+  x: 450,
+  y: 50,
+  width: 35,
+  height: 80
+
+};
+
+
 // check for collision between two objects using axis-aligned bounding box (AABB)
 // @see https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
 function collides(obj1, obj2) {
@@ -63,6 +84,13 @@ function collides(obj1, obj2) {
 // game loop
 function loop() {
   if (leftScore > 6 || rightScore > 6) {
+
+    if (leftScore > 6) {
+      document.getElementById("winner").innerHTML = "You Lost!";
+    }
+    else {
+      document.getElementById("winner").innerHTML = "You Won!";
+    }
     document.querySelector("#alert").style.display="block"
     sound2.play();
   } else {
@@ -76,14 +104,14 @@ function loop() {
     // prevent paddles from going through walls
     if (leftPaddle.y < grid) {
       leftPaddle.y = grid;
-    } else if (leftPaddle.y > maxPaddleY) {
-      leftPaddle.y = maxPaddleY;
+    } else if (leftPaddle.y > maxPaddleYL) {
+      leftPaddle.y = maxPaddleYL;
     }
 
     if (rightPaddle.y < grid) {
       rightPaddle.y = grid;
-    } else if (rightPaddle.y > maxPaddleY) {
-      rightPaddle.y = maxPaddleY;
+    } else if (rightPaddle.y > maxPaddleYR) {
+      rightPaddle.y = maxPaddleYR;
     }
 
     // draw paddles
@@ -127,6 +155,11 @@ function loop() {
         sound3.play();
         leftScore = leftScore + 1;
       }
+      // increase ball speed per point
+      if(rightScore < 7 && leftScore < 7) {
+        requestAnimationFrame(loop);
+        ballSpeed += 0.000000000000000000001;
+      }
       // give some time for the player to recover before launching the ball again
       setTimeout(() => {
         ball.resetting = false;
@@ -142,15 +175,49 @@ function loop() {
       // move ball next to the paddle otherwise the collision will happen again
       // in the next frame
       ball.x = leftPaddle.x + leftPaddle.width;
+      leftPaddle.height = 0.9 * leftPaddle.height;
+      maxPaddleYL = canvas.height - grid - leftPaddle.height;
     } else if (collides(ball, rightPaddle)) {
       ball.dx *= -1;
       sound.play();
       // move ball next to the paddle otherwise the collision will happen again
       // in the next frame
       ball.x = rightPaddle.x - ball.width;
+      rightPaddle.height = 0.9 * rightPaddle.height;
+      maxPaddleYR = canvas.height - grid - rightPaddle.height;
+    }
+
+    // spawn in obstacles
+    drawObstacles();
+
+    // check to see if ball collides with obstacles
+    if (collides(ball, obstacle1)) {
+      ball.dx *= -1;
+      
+      if (ball.dx == ballSpeed) {
+        ball.x = obstacle1.x + obstacle1.width;
+      }
+      else if (ball.dx == -ballSpeed) {
+        ball.x = obstacle1.x - ball.width;
+      }
+      // respawn the obstacle upon impact at a diff. random spot
+      randomizeObstacle(obstacle1);
+    }
+    if (collides(ball, obstacle2)) {
+      ball.dx *= -1;
+      
+      if (ball.dx == ballSpeed) {
+        ball.x = obstacle2.x + obstacle2.width;
+      }
+      else if (ball.dx == -ballSpeed) {
+        ball.x = obstacle2.x - ball.width;
+      }
+      // respawn the obstacle upon impact at a diff. random spot
+      randomizeObstacle(obstacle2);
     }
 
     // draw ball
+    context.fillStyle = "white";
     context.fillRect(ball.x, ball.y, ball.width, ball.height);
 
     // draw walls
@@ -198,9 +265,9 @@ document.addEventListener("keyup", function (e) {
     rightPaddle.dy = 0;
   }
 
-  if (e.which === 83 || e.which === 87) {
-    leftPaddle.dy = 0;
-  }
+  //if (e.which === 83 || e.which === 87) {
+  //  leftPaddle.dy = 0;
+  //}
 });
 document.querySelector("#close-btn").addEventListener("click",function(e) {
   e.target.parentElement.style.display="none";
@@ -208,8 +275,28 @@ document.querySelector("#close-btn").addEventListener("click",function(e) {
 document.querySelector("#playAgain-btn").addEventListener("click",function(e) {
   leftScore=rightScore=0;
   e.target.parentElement.style.display="none";
+  leftPaddle.height = paddleHeight;
+  rightPaddle.height = paddleHeight;
+  leftPaddle.y = canvas.height / 2 - paddleHeight / 2;
+  rightPaddle.y = canvas.height / 2 - paddleHeight / 2;
   requestAnimationFrame(loop);
 })
+
+// function to draw in the obstacles
+function drawObstacles() {
+  context.fillStyle = "red";
+  context.fillRect(obstacle1.x, obstacle1.y, obstacle1.width, obstacle1.height);
+  context.fillRect(obstacle2.x, obstacle2.y, obstacle2.width, obstacle2.height);
+}
+
+// function to randomize the position of the obstacle
+function randomizeObstacle(obstacle) {
+  context.fillStyle = "red";
+  // pick a random height between 50 and 450 and reset the obstacle's height
+  obstacle.y = (Math.random() * 401) + 50
+  //redraw the obstacle
+  context.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+}
 
 // start the game
 requestAnimationFrame(loop);
