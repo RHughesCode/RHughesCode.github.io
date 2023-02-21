@@ -149,6 +149,11 @@ function loop() {
       } else if (ball.x > canvas.width) {
         leftScore = leftScore + 1;
       }
+      // increase ball speed per point
+      if(rightScore < 7 && leftScore < 7) {
+        requestAnimationFrame(loop);
+        ballSpeed += 0.000000000000000000001;
+      }
       // give some time for the player to recover before launching the ball again
       setTimeout(() => {
         ball.resetting = false;
